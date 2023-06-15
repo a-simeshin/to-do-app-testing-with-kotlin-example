@@ -63,16 +63,16 @@ class FailFastCallable(private val log: Logger, private val todoRestClient: Todo
         } catch (e: Exception) {
             val rootCause = ExceptionUtils.getRootCause(e)
             log.warn("Something went wrong", rootCause)
-            when (rootCause) {
-                is ProtocolException -> return true
-                is ConnectionClosedException -> return true
-                is MessageConstraintException -> return true
-                is MalformedChunkCodingException -> return true
-                is MethodNotSupportedException -> return true
-                is NoHttpResponseException -> return true
-                is ParseException -> return true
-                is UnsupportedHttpVersionException -> return true
-                else -> return false
+            return when (rootCause) {
+                is ProtocolException -> true
+                is ConnectionClosedException -> true
+                is MessageConstraintException -> true
+                is MalformedChunkCodingException -> true
+                is MethodNotSupportedException -> true
+                is NoHttpResponseException -> true
+                is ParseException -> true
+                is UnsupportedHttpVersionException -> true
+                else -> false
             }
         }
     }
