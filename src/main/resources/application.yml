@@ -1,0 +1,7 @@
+rest-client-config-data:
+  url: "http://localhost:8080"
+  todosGetPath: "/todos"
+  todosPostPath: "/todos/{id}"
+  todosPutPath: "/todos/{id}"
+  todosDeletePath: "/todos/{id}"
+  ssl: false
