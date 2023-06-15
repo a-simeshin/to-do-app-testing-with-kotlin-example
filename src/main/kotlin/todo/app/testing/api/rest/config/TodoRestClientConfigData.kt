@@ -51,7 +51,10 @@ data class TodoRestClientConfigData(
     val connectionRequestTimeout: Int = 30_000,
     val socketTimeout: Int = 30_000,
     val maxTotalConnections: Int = 1000,
-    val maxConnectionsPerRoute: Int = 5
+    val maxConnectionsPerRoute: Int = 5,
+
+    //Allure interceptor configuration
+    val enableHttpAttachments: Boolean = true
 ) {
     fun validate(): TodoRestClientConfigData {
         if (url.isEmpty()) {

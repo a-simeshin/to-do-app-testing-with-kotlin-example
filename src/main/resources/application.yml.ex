@@ -16,3 +16,4 @@ rest-client-config-data:
   socketTimeout: 30000
   maxTotalConnections: 1000
   maxConnectionsPerRoute: 5
+  enableHttpAttachments: true
