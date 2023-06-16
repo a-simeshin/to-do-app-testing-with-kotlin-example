@@ -1,5 +1,5 @@
 # This is template yaml file for different test environments.
-# For just you should delete .ex from filename, then edit all required parameters.
+# For usage delete .ex from filename, then edit postfix profile-name and all required parameters below.
 
 rest-client-config-data:
   url: "http://localhost:8080"
@@ -17,3 +17,11 @@ rest-client-config-data:
   maxTotalConnections: 1000
   maxConnectionsPerRoute: 5
   enableHttpAttachments: true
+
+# This section for generic docker image configuration for test-containers
+# By default enabled=false and this properties is not required for integration tests
+to-do-app-in-docker:
+  enabled: true
+  imageName: "todo-app:latest"
+  exposedPorts:
+    8080: 4242

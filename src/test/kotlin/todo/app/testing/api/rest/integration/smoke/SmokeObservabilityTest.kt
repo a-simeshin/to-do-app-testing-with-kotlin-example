@@ -7,12 +7,15 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.testcontainers.junit.jupiter.Testcontainers
+import todo.app.testing.api.rest.config.TodoAppInDockerConfiguration
 import todo.app.testing.api.rest.config.TodoRestClientConfiguration
 import todo.app.testing.api.rest.impl.TodoRestApi
 
 @Tag("smoke")
+@Testcontainers
 @Feature("application is observable and ready for integration tests")
-@SpringBootTest(classes = [TodoRestClientConfiguration::class])
+@SpringBootTest(classes = [TodoRestClientConfiguration::class, TodoAppInDockerConfiguration::class])
 class SmokeObservabilityTest {
 
     @Autowired lateinit var todoRestApi: TodoRestApi

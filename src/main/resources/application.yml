@@ -5,3 +5,9 @@ rest-client-config-data:
   todosPutPath: "/todos/{id}"
   todosDeletePath: "/todos/{id}"
   ssl: false
+
+to-do-app-in-docker:
+  enabled: true
+  imageName: "todo-app:latest"
+  exposedPorts:
+    8080: 4242
