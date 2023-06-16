@@ -60,25 +60,26 @@ class RestOperationsFactory(private val settings: TodoRestClientConfigData) {
      * @return A RestOperations instance with the configured settings.
      */
     fun buildRestOperations(): RestOperations {
+        // Probably this builder should be autowired in case of metrics or spring autoconfigured
+        // interceptors
         val restTemplateBuilder = RestTemplateBuilder()
-        // Add attachments for allure report
-        if (settings.enableHttpAttachments) {
-            restTemplateBuilder.interceptors(AllureRestTemplate())
-        }
-        // Add default uri predicate to all requests
-        restTemplateBuilder.uriTemplateHandler(DefaultUriBuilderFactory(settings.url))
-
         val build = restTemplateBuilder.build()
 
         // Add requestFactory with http and https support
-        build.requestFactory = BufferingClientHttpRequestFactory(
+        build.requestFactory =
+            BufferingClientHttpRequestFactory(
                 HttpComponentsClientHttpRequestFactory(
-                        createClosableHttpClient(
-                                createSslConnectionSocketFactory(buildSslContext())
-                        )
+                    createClosableHttpClient(createSslConnectionSocketFactory(buildSslContext()))
                 )
-        )
-//        build.uriTemplateHandler = DefaultUriBuilderFactory(settings.url)
+            )
+
+        // Add default uri predicate to all requests
+        build.uriTemplateHandler = DefaultUriBuilderFactory(settings.url)
+
+        // Add attachments for allure report
+        if (settings.enableHttpAttachments) {
+            build.interceptors.add(AllureRestTemplate())
+        }
 
         return build
     }
@@ -108,27 +109,27 @@ class RestOperationsFactory(private val settings: TodoRestClientConfigData) {
         // Build KeyStore
         if (settings.keyStorePath.isNotEmpty() && settings.keyStorePassword.isNotEmpty()) {
             sslBuilder.withIdentityMaterial(
-                    Paths.get(settings.keyStorePath),
-                    settings.keyStorePassword.toCharArray()
+                Paths.get(settings.keyStorePath),
+                settings.keyStorePassword.toCharArray()
             )
         } else {
             sslBuilder.withIdentityMaterial(
-                    PemUtils.loadIdentityMaterial(
-                            Paths.get(settings.certificateChain),
-                            Paths.get(settings.privateKey)
-                    )
+                PemUtils.loadIdentityMaterial(
+                    Paths.get(settings.certificateChain),
+                    Paths.get(settings.privateKey)
+                )
             )
         }
 
         // Build TrustStore
         if (settings.trustStorePath.isNotEmpty() && settings.trustStorePassword.isNotEmpty()) {
             sslBuilder.withTrustMaterial(
-                    Paths.get(settings.trustStorePath),
-                    settings.trustStorePassword.toCharArray()
+                Paths.get(settings.trustStorePath),
+                settings.trustStorePassword.toCharArray()
             )
         } else {
             sslBuilder.withTrustMaterial(
-                    PemUtils.loadTrustMaterial(Paths.get(settings.trustCertCollectionPath))
+                PemUtils.loadTrustMaterial(Paths.get(settings.trustCertCollectionPath))
             )
         }
 
@@ -155,16 +156,16 @@ class RestOperationsFactory(private val settings: TodoRestClientConfigData) {
      */
     @Suppress("UNUSED_ANONYMOUS_PARAMETER")
     private fun createSslConnectionSocketFactory(
-            context: Optional<SSLContext>
+        context: Optional<SSLContext>
     ): Optional<SSLConnectionSocketFactory> {
         if (context.isEmpty) return Optional.empty()
 
         @Suppress("RedundantSamConstructor")
         return Optional.of(
-                SSLConnectionSocketFactory(
-                        context.get(),
-                        HostnameVerifier { hostname, session -> true }
-                )
+            SSLConnectionSocketFactory(
+                context.get(),
+                HostnameVerifier { hostname, session -> true }
+            )
         )
     }
 
@@ -183,7 +184,7 @@ class RestOperationsFactory(private val settings: TodoRestClientConfigData) {
      * SSLConnectionSocketFactory (if present).
      */
     private fun createRegistry(
-            sslConnectionSocketFactory: Optional<SSLConnectionSocketFactory>
+        sslConnectionSocketFactory: Optional<SSLConnectionSocketFactory>
     ): Registry<ConnectionSocketFactory> {
         val builder = RegistryBuilder.create<ConnectionSocketFactory>()
         builder.register("http", PlainConnectionSocketFactory())
@@ -215,23 +216,23 @@ class RestOperationsFactory(private val settings: TodoRestClientConfigData) {
      * present).
      */
     private fun createClosableHttpClient(
-            sslConnectionSocketFactory: Optional<SSLConnectionSocketFactory>
+        sslConnectionSocketFactory: Optional<SSLConnectionSocketFactory>
     ): CloseableHttpClient {
         val connectionManager =
-                PoolingHttpClientConnectionManager(createRegistry(sslConnectionSocketFactory))
+            PoolingHttpClientConnectionManager(createRegistry(sslConnectionSocketFactory))
         connectionManager.maxTotal = settings.maxTotalConnections
         connectionManager.defaultMaxPerRoute = settings.maxConnectionsPerRoute
 
         val clientBuilder =
-                HttpClients.custom()
-                        .setConnectionManager(connectionManager)
-                        .setDefaultRequestConfig(
-                                RequestConfig.custom()
-                                        .setConnectTimeout(settings.connectTimeout)
-                                        .setConnectionRequestTimeout(settings.connectionRequestTimeout)
-                                        .setSocketTimeout(settings.connectionRequestTimeout)
-                                        .build()
-                        )
+            HttpClients.custom()
+                .setConnectionManager(connectionManager)
+                .setDefaultRequestConfig(
+                    RequestConfig.custom()
+                        .setConnectTimeout(settings.connectTimeout)
+                        .setConnectionRequestTimeout(settings.connectionRequestTimeout)
+                        .setSocketTimeout(settings.connectionRequestTimeout)
+                        .build()
+                )
         if (sslConnectionSocketFactory.isPresent) {
             clientBuilder.setSSLSocketFactory(sslConnectionSocketFactory.get())
         }

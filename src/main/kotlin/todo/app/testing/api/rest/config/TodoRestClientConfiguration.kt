@@ -1,5 +1,7 @@
 package todo.app.testing.api.rest.config
 
+import java.util.concurrent.TimeUnit
+import javax.annotation.PostConstruct
 import org.awaitility.Awaitility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -8,8 +10,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestOperations
 import todo.app.testing.api.rest.impl.TodoRestApi
 import todo.app.testing.api.rest.impl.TodoRestClient
-import java.util.concurrent.TimeUnit
-import javax.annotation.PostConstruct
 
 /**
  * Configuration class for TodoRestClient. This class is responsible for configuring and creating
@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct
 class TodoRestClientConfiguration {
 
     @Bean
-    fun todoRestApi (@Autowired todoRestClient: TodoRestClient) : TodoRestApi {
+    fun todoRestApi(@Autowired todoRestClient: TodoRestClient): TodoRestApi {
         return TodoRestApi(todoRestClient)
     }
 

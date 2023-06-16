@@ -18,7 +18,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  * certificate and the certificate authority's certificate) into a single file. PEM format is
  * commonly used for certificate files such as .pem, .crt, .cer and .key files, it is a more
  * flexible format that can include all the certificates and the private key in one file.</p>
- *
  */
 @ConfigurationProperties(prefix = "rest-client-config-data")
 data class TodoRestClientConfigData(
@@ -53,7 +52,7 @@ data class TodoRestClientConfigData(
     val maxTotalConnections: Int = 1000,
     val maxConnectionsPerRoute: Int = 5,
 
-    //Allure interceptor configuration
+    // Allure interceptor configuration
     val enableHttpAttachments: Boolean = true
 ) {
     fun validate(): TodoRestClientConfigData {
