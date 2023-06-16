@@ -1,7 +1,7 @@
 package todo.app.testing.api.rest.config
 
+import jakarta.annotation.PostConstruct
 import java.util.concurrent.TimeUnit
-import javax.annotation.PostConstruct
 import org.awaitility.Awaitility
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -54,7 +54,7 @@ class TodoRestClientConfiguration {
     fun initAwaitility() {
         Awaitility.pollInSameThread()
         Awaitility.ignoreExceptionsByDefault()
-        Awaitility.setDefaultPollDelay(100, TimeUnit.MILLISECONDS)
-        Awaitility.setDefaultTimeout(5, TimeUnit.SECONDS)
+        Awaitility.setDefaultPollDelay(500, TimeUnit.MILLISECONDS)
+        Awaitility.setDefaultTimeout(10, TimeUnit.SECONDS)
     }
 }

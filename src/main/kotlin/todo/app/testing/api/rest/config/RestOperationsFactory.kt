@@ -3,19 +3,21 @@ package todo.app.testing.api.rest.config
 import io.qameta.allure.springweb.AllureRestTemplate
 import java.nio.file.Paths
 import java.util.Optional
+import java.util.concurrent.TimeUnit
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLContext
 import nl.altindag.ssl.SSLFactory
 import nl.altindag.ssl.pem.util.PemUtils
-import org.apache.http.client.config.RequestConfig
-import org.apache.http.config.Registry
-import org.apache.http.config.RegistryBuilder
-import org.apache.http.conn.socket.ConnectionSocketFactory
-import org.apache.http.conn.socket.PlainConnectionSocketFactory
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory
-import org.apache.http.impl.client.CloseableHttpClient
-import org.apache.http.impl.client.HttpClients
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager
+import org.apache.hc.client5.http.config.ConnectionConfig
+import org.apache.hc.client5.http.config.RequestConfig
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
+import org.apache.hc.client5.http.impl.classic.HttpClients
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory
+import org.apache.hc.core5.http.config.Registry
+import org.apache.hc.core5.http.config.RegistryBuilder
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.http.client.BufferingClientHttpRequestFactory
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
@@ -65,13 +67,22 @@ class RestOperationsFactory(private val settings: TodoRestClientConfigData) {
         val restTemplateBuilder = RestTemplateBuilder()
         val build = restTemplateBuilder.build()
 
-        // Add requestFactory with http and https support
+        val optionalSslContext = buildSslContext()
+        val optionalSslConnectionSocketFactory =
+            createSslConnectionSocketFactory(optionalSslContext)
+        val closableHttpClient = createClosableHttpClient(optionalSslConnectionSocketFactory)
+
+        val httpComponentsClientHttpRequestFactory = HttpComponentsClientHttpRequestFactory()
+        httpComponentsClientHttpRequestFactory.httpClient = closableHttpClient
+        httpComponentsClientHttpRequestFactory.setConnectTimeout(settings.connectTimeout)
+        httpComponentsClientHttpRequestFactory.setConnectionRequestTimeout(
+            settings.connectionRequestTimeout
+        )
+
+        // Add http and https both support, factory should buffer responses to access in
+        // AllureRestTemplate
         build.requestFactory =
-            BufferingClientHttpRequestFactory(
-                HttpComponentsClientHttpRequestFactory(
-                    createClosableHttpClient(createSslConnectionSocketFactory(buildSslContext()))
-                )
-            )
+            BufferingClientHttpRequestFactory(httpComponentsClientHttpRequestFactory)
 
         // Add default uri predicate to all requests
         build.uriTemplateHandler = DefaultUriBuilderFactory(settings.url)
@@ -80,7 +91,6 @@ class RestOperationsFactory(private val settings: TodoRestClientConfigData) {
         if (settings.enableHttpAttachments) {
             build.interceptors.add(AllureRestTemplate())
         }
-
         return build
     }
 
@@ -218,24 +228,28 @@ class RestOperationsFactory(private val settings: TodoRestClientConfigData) {
     private fun createClosableHttpClient(
         sslConnectionSocketFactory: Optional<SSLConnectionSocketFactory>
     ): CloseableHttpClient {
-        val connectionManager =
-            PoolingHttpClientConnectionManager(createRegistry(sslConnectionSocketFactory))
+        val httpRegistry = createRegistry(sslConnectionSocketFactory)
+        val connectionManager = PoolingHttpClientConnectionManager(httpRegistry)
         connectionManager.maxTotal = settings.maxTotalConnections
         connectionManager.defaultMaxPerRoute = settings.maxConnectionsPerRoute
+        connectionManager.setDefaultConnectionConfig(
+            ConnectionConfig.custom()
+                .setSocketTimeout(settings.socketTimeout, TimeUnit.MILLISECONDS)
+                .setConnectTimeout(settings.connectTimeout.toLong(), TimeUnit.MILLISECONDS)
+                .build()
+        )
 
         val clientBuilder =
             HttpClients.custom()
                 .setConnectionManager(connectionManager)
                 .setDefaultRequestConfig(
                     RequestConfig.custom()
-                        .setConnectTimeout(settings.connectTimeout)
-                        .setConnectionRequestTimeout(settings.connectionRequestTimeout)
-                        .setSocketTimeout(settings.connectionRequestTimeout)
+                        .setConnectionRequestTimeout(
+                            settings.connectionRequestTimeout.toLong(),
+                            TimeUnit.MILLISECONDS
+                        )
                         .build()
                 )
-        if (sslConnectionSocketFactory.isPresent) {
-            clientBuilder.setSSLSocketFactory(sslConnectionSocketFactory.get())
-        }
         return clientBuilder.build()
     }
 }

@@ -9,8 +9,8 @@ class FailFastThrowable(private val todoRestClient: TodoRestClient) : ThrowingRu
         return when (e) {
             is java.net.ProtocolException -> true
             is javax.net.ssl.SSLException -> true
-            is org.apache.http.ProtocolException -> true
-            is org.apache.http.ParseException -> true
+            is org.apache.hc.core5.http.ProtocolException -> true
+            is org.apache.hc.client5.http.UnsupportedSchemeException -> true
             else -> false
         }
     }
@@ -19,13 +19,15 @@ class FailFastThrowable(private val todoRestClient: TodoRestClient) : ThrowingRu
         return when (e) {
             is java.net.ConnectException -> {
                 // Exception when application is deployed but still in the process of starting or
-                // restarting
+                // restarting, will have Connection refused result
                 return !(e.message!!.contains("Connection refused"))
             }
             is java.net.SocketException -> true
-            is org.apache.http.ConnectionClosedException -> true
-            is org.apache.http.MethodNotSupportedException -> true
-            is org.apache.http.NoHttpResponseException -> true
+            is org.apache.hc.client5.http.ConnectTimeoutException -> true
+            is org.apache.hc.core5.http.ConnectionRequestTimeoutException -> true
+            is org.apache.hc.core5.http.ConnectionClosedException -> true
+            is org.apache.hc.core5.http.MethodNotSupportedException -> true
+            is org.apache.hc.core5.http.NoHttpResponseException -> true
             else -> false
         }
     }
