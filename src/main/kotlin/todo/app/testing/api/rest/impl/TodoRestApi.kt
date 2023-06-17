@@ -21,10 +21,6 @@ class TodoRestApi(private val todoRestClient: TodoRestClient) {
         conditionFactory: ConditionFactory,
         responseMatcher: Matcher<Collection<TodoEntity>>
     ): List<TodoEntity> {
-        // Since this method is used in the health-check method, in order to avoid a cyclic call,
-        // health-check is not called in this case
-        // todo add health-check call function after implementing /health endpoint, see issues.md
-
         val result = AtomicReference<List<TodoEntity>>()
         val stepName = "Waiting for get todos for condition: ${responseMatcher.toDescription()}"
         Allure.step(
@@ -51,8 +47,6 @@ class TodoRestApi(private val todoRestClient: TodoRestClient) {
         conditionFactory: ConditionFactory,
         responseMatcher: Matcher<Collection<TodoEntity>>
     ): List<TodoEntity> {
-        checkHealth()
-
         val result = AtomicReference<List<TodoEntity>>()
         val stepName =
             "Waiting for get todos with offset and limit for condition: ${responseMatcher.toDescription()}"
@@ -80,11 +74,9 @@ class TodoRestApi(private val todoRestClient: TodoRestClient) {
         conditionFactory: ConditionFactory,
         responseMatcher: Matcher<Collection<TodoEntity>>
     ): List<TodoEntity> {
-        checkHealth()
-
         val result = AtomicReference<List<TodoEntity>>()
         val stepName =
-            "Waiting for get todos with offset for condition: " + responseMatcher.toDescription()
+            "Waiting for get todos with offset for condition: ${responseMatcher.toDescription()}"
         Allure.step(
             stepName,
             Allure.ThrowableRunnable {
@@ -133,26 +125,23 @@ class TodoRestApi(private val todoRestClient: TodoRestClient) {
 
     @Step("POST todoEntity")
     fun post(todoEntity: TodoEntity): Any {
-        checkHealth()
         return todoRestClient.post(todoEntity)
     }
 
     @Step("PUT todoEntity")
     fun put(todoEntity: TodoEntity): Any {
-        checkHealth()
         return todoRestClient.put(todoEntity)
     }
 
     @Step("DELETE todoEntity by id")
     fun delete(todoEntityId: Any): Any {
-        checkHealth()
         return todoRestClient.delete(todoEntityId)
     }
 
     @Step("Health check")
     fun checkHealth() {
         // In healthcheck purposes call get method wo params
-        // todo: switch to endpoint /healthcheck when its released see issues.md
+        // todo: switch to endpoint /health when its released see issues.md
         this.get(Awaitility.await(), IsCollectionWithSize.hasSize(greaterThan(-1)))
     }
 }

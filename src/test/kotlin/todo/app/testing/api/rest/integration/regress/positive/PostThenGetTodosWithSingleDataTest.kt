@@ -29,6 +29,11 @@ class PostThenGetTodosWithSingleDataTest {
 
     var todoEntity = TodoEntity(1, "Первое дело", false)
 
+    @BeforeEach
+    fun healthCheck() {
+        todoRestApi.checkHealth()
+    }
+
     @AfterEach
     fun cleanup() {
         todoRestApi.delete(todoEntity.id)

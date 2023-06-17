@@ -54,7 +54,7 @@ class TodoRestClientConfiguration {
     fun initAwaitility() {
         Awaitility.pollInSameThread()
         Awaitility.ignoreExceptionsByDefault()
-        Awaitility.setDefaultPollDelay(500, TimeUnit.MILLISECONDS)
+        Awaitility.setDefaultPollInterval(500, TimeUnit.MILLISECONDS)
         Awaitility.setDefaultTimeout(10, TimeUnit.SECONDS)
     }
 }

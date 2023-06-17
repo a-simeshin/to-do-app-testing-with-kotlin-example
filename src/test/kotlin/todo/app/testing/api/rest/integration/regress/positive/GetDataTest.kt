@@ -3,6 +3,7 @@ package todo.app.testing.api.rest.integration.regress.positive
 import io.qameta.allure.Feature
 import org.awaitility.Awaitility
 import org.hamcrest.collection.IsCollectionWithSize.hasSize
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -20,9 +21,14 @@ import todo.app.testing.api.rest.impl.TodoRestApi
 @DirtiesContext
 @Feature("GET todos works wo data")
 @SpringBootTest(classes = [TodoRestClientConfiguration::class, TodoAppInDockerConfiguration::class])
-class GetTodosWithoutDataTest {
+class GetDataTest {
 
     @Autowired lateinit var todoRestApi: TodoRestApi
+
+    @BeforeEach
+    fun healthCheck() {
+        todoRestApi.checkHealth()
+    }
 
     @Test
     fun `todo application GET works by default without query parameters`() {
