@@ -9,7 +9,7 @@ import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.output.Slf4jLogConsumer
 
 @Configuration
-@EnableConfigurationProperties(TodoAppInDockerProperties::class)
+@EnableConfigurationProperties(TodoAppInDockerConfigData::class)
 class TodoAppInDockerConfiguration {
 
     @Bean
@@ -19,7 +19,7 @@ class TodoAppInDockerConfiguration {
         havingValue = "true",
         matchIfMissing = false
     )
-    fun todoAppInDockerContainer(dockerProperties: TodoAppInDockerProperties): GenericContainer<*> {
+    fun todoAppInDockerContainer(dockerProperties: TodoAppInDockerConfigData): GenericContainer<*> {
         val genericContainer = GenericContainer(dockerProperties.imageName)
         dockerProperties.exposedPorts.forEach { (hostPort, containerPort) ->
             genericContainer.addExposedPort(hostPort)

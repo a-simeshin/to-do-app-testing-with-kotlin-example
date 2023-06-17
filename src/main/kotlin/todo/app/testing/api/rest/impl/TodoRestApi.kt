@@ -9,6 +9,7 @@ import org.awaitility.core.ConditionFactory
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
 import org.hamcrest.StringDescription
+import org.hamcrest.collection.IsCollectionWithSize
 import org.slf4j.LoggerFactory
 import todo.app.testing.api.rest.dto.TodoEntity
 
@@ -16,7 +17,10 @@ class TodoRestApi(private val todoRestClient: TodoRestClient) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    fun get(conditionFactory: ConditionFactory, responseMatcher: Matcher<Any>): List<TodoEntity> {
+    fun get(
+        conditionFactory: ConditionFactory,
+        responseMatcher: Matcher<Collection<TodoEntity>>
+    ): List<TodoEntity> {
         // Since this method is used in the health-check method, in order to avoid a cyclic call,
         // health-check is not called in this case
         // todo add health-check call function after implementing /health endpoint, see issues.md
@@ -45,7 +49,7 @@ class TodoRestApi(private val todoRestClient: TodoRestClient) {
         offset: Long,
         limit: Long,
         conditionFactory: ConditionFactory,
-        responseMatcher: Matcher<Any>
+        responseMatcher: Matcher<Collection<TodoEntity>>
     ): List<TodoEntity> {
         checkHealth()
 
@@ -74,7 +78,7 @@ class TodoRestApi(private val todoRestClient: TodoRestClient) {
     fun getWithOffset(
         offset: Long,
         conditionFactory: ConditionFactory,
-        responseMatcher: Matcher<Any>
+        responseMatcher: Matcher<Collection<TodoEntity>>
     ): List<TodoEntity> {
         checkHealth()
 
@@ -103,7 +107,7 @@ class TodoRestApi(private val todoRestClient: TodoRestClient) {
     fun getWithLimit(
         limit: Long,
         conditionFactory: ConditionFactory,
-        responseMatcher: Matcher<Any>
+        responseMatcher: Matcher<Collection<TodoEntity>>
     ): List<TodoEntity> {
         val result = AtomicReference<List<TodoEntity>>()
         val stepName =
@@ -149,7 +153,7 @@ class TodoRestApi(private val todoRestClient: TodoRestClient) {
     fun checkHealth() {
         // In healthcheck purposes call get method wo params
         // todo: switch to endpoint /healthcheck when its released see issues.md
-        this.get(Awaitility.await(), `is`(not(nullValue())))
+        this.get(Awaitility.await(), IsCollectionWithSize.hasSize(greaterThan(-1)))
     }
 }
 

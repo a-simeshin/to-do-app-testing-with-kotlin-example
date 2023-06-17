@@ -7,6 +7,8 @@ rest-client-config-data:
   todosPostPath: "/todos/{id}"
   todosPutPath: "/todos/{id}"
   todosDeletePath: "/todos/{id}"
+  basicAuthLogin: "test credential login"
+  basicAuthPassword: "test credential password"
   ssl: true
   trustCertCollectionPath: "path/to/ca.pem"
   certificateChain: "path/to/tls.crt"

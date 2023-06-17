@@ -1,9 +1,9 @@
 rest-client-config-data:
   url: "http://localhost:8080"
   todosGetPath: "/todos"
-  todosPostPath: "/todos/{id}"
-  todosPutPath: "/todos/{id}"
-  todosDeletePath: "/todos/{id}"
+  todosPostPath: "/todos"
+  todosPutPath: "/todos/{0}"
+  todosDeletePath: "/todos/{0}"
   ssl: false
 
 to-do-app-in-docker:
@@ -11,3 +11,8 @@ to-do-app-in-docker:
   imageName: "todo-app:latest"
   exposedPorts:
     8080: 4242
+
+logging:
+  level:
+    org.springframework.web.client.RestTemplate: DEBUG
+    org.springframework.web.HttpLogging: DEBUG

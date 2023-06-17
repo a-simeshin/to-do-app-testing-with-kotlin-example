@@ -25,9 +25,13 @@ data class TodoRestClientConfigData(
     // obligate parameters
     val url: String = "http://localhost:8080",
     val todosGetPath: String = "/todos",
-    val todosPostPath: String = "/todos/{id}",
+    val todosPostPath: String = "/todos",
     val todosPutPath: String = "/todos/{id}",
     val todosDeletePath: String = "/todos/{id}",
+
+    // If some API requires authentication with specific role
+    val basicAuthLogin: String = "admin",
+    val basicAuthPassword: String = "admin",
 
     // SSL Configuration
     val ssl: Boolean = false,
