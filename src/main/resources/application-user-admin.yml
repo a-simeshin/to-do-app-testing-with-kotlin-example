@@ -1,0 +1,3 @@
+rest-client-config-data:
+  basicAuthLogin: "admin"
+  basicAuthPassword: "admin"

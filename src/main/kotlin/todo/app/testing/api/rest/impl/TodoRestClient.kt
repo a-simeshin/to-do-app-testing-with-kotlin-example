@@ -28,7 +28,7 @@ class TodoRestClient(
             ?: throw NullPointerException("Got null from rest GET " + setting.todosGetPath)
     }
 
-    fun get(offset: Long, limit: Long): List<TodoEntity> {
+    fun get(offset: Any?, limit: Any?): List<TodoEntity> {
         val newUrl = setting.todosGetPath + "?offset=" + offset + "&limit=" + limit
         return restOperations
             .exchange(
@@ -41,7 +41,7 @@ class TodoRestClient(
             ?: throw NullPointerException("Got null from GET $newUrl")
     }
 
-    fun getWithOffset(offset: Long): List<TodoEntity> {
+    fun getWithOffset(offset: Any?): List<TodoEntity> {
         val newUrl = setting.todosGetPath + "?offset=" + offset
         return restOperations
             .exchange(
@@ -54,7 +54,7 @@ class TodoRestClient(
             ?: throw NullPointerException("Got null from GET $newUrl")
     }
 
-    fun getWithLimit(limit: Long): List<TodoEntity> {
+    fun getWithLimit(limit: Any?): List<TodoEntity> {
         val newUrl = setting.todosGetPath + "?limit=" + limit
         return restOperations
             .exchange(
@@ -67,12 +67,12 @@ class TodoRestClient(
             ?: throw NullPointerException("Got null from GET $newUrl")
     }
 
-    fun post(todoEntity: TodoEntity) {
+    fun post(todoEntity: Any?) {
         val exchange =
             restOperations.exchange(
                 setting.todosPostPath,
                 HttpMethod.POST,
-                HttpEntity<TodoEntity>(todoEntity, getHeaders()),
+                HttpEntity<Any>(todoEntity, getHeaders()),
                 typeReference<String>()
             )
         assertThat(
@@ -82,17 +82,20 @@ class TodoRestClient(
         )
     }
 
-    fun put(todoEntity: TodoEntity): Any {
-        return restOperations
-            .exchange(
+    fun put(todoEntity: TodoEntity) {
+        val exchange =
+            restOperations.exchange(
                 setting.todosPutPath,
                 HttpMethod.PUT,
                 HttpEntity<TodoEntity>(todoEntity, getHeaders()),
                 typeReference<String>(),
                 todoEntity.id
             )
-            .body
-            ?: throw NullPointerException("Got null from PUT " + setting.todosPutPath)
+        assertThat(
+            "Обновление TODO завершилось кодом 200 - OK",
+            exchange.statusCode,
+            `is`(HttpStatus.OK)
+        )
     }
 
     fun delete(todoEntityId: Any) {
@@ -102,7 +105,7 @@ class TodoRestClient(
             restOperations.exchange(
                 setting.todosDeletePath,
                 HttpMethod.DELETE,
-                HttpEntity<TodoEntity>(headers),
+                HttpEntity<Any>(headers),
                 typeReference<String>(),
                 todoEntityId
             )

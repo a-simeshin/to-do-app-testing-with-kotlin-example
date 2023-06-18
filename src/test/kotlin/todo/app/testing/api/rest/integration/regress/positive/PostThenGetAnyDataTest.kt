@@ -23,7 +23,7 @@ import todo.app.testing.api.rest.impl.TodoRestApi
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 @Feature("POST data then GET todos works with multiple data")
 @SpringBootTest(classes = [TodoRestClientConfiguration::class, TodoAppInDockerConfiguration::class])
-class PostThenGetTodosWithMultipleDataTest {
+class PostThenGetAnyDataTest {
 
     @Autowired lateinit var todoRestApi: TodoRestApi
 

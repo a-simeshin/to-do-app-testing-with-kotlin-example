@@ -20,7 +20,7 @@ import todo.app.testing.api.rest.impl.TodoRestApi
 @DirtiesContext
 @Feature("POST todos just works")
 @SpringBootTest(classes = [TodoRestClientConfiguration::class, TodoAppInDockerConfiguration::class])
-class PostDataTest {
+class PostTest {
 
     @Autowired lateinit var todoRestApi: TodoRestApi
 
@@ -40,7 +40,7 @@ class PostDataTest {
     fun `multiple POST todo works by default`() {
         assertDoesNotThrow("POST with entity should work") {
             for (i in 1..5) todoRestApi.post(
-                TodoEntity(i.toLong(), "Проверить POST новых сущностей", true)
+                TodoEntity(i.toLong(), "Проверить множественный POST новых сущностей", true)
             )
         }
     }

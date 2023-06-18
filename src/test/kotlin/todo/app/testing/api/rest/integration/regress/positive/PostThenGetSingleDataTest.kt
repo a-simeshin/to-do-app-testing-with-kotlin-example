@@ -3,7 +3,6 @@ package todo.app.testing.api.rest.integration.regress.positive
 import io.qameta.allure.Feature
 import java.util.concurrent.TimeUnit
 import org.awaitility.Awaitility
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +13,7 @@ import todo.app.testing.api.rest.config.TodoAppInDockerConfiguration
 import todo.app.testing.api.rest.config.TodoRestClientConfiguration
 import todo.app.testing.api.rest.dto.TodoEntity
 import todo.app.testing.api.rest.impl.TodoRestApi
+import todo.app.testing.api.rest.matcher.TodoEntityResponseMatcher
 
 @Tag("regress")
 @Tag("get-todo")
@@ -23,7 +23,7 @@ import todo.app.testing.api.rest.impl.TodoRestApi
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 @Feature("POST data then GET todos works with single data")
 @SpringBootTest(classes = [TodoRestClientConfiguration::class, TodoAppInDockerConfiguration::class])
-class PostThenGetTodosWithSingleDataTest {
+class PostThenGetSingleDataTest {
 
     @Autowired lateinit var todoRestApi: TodoRestApi
 
@@ -48,7 +48,7 @@ class PostThenGetTodosWithSingleDataTest {
         assertDoesNotThrow("GET without query parameters should not hide data") {
             todoRestApi.get(
                 conditionFactory = Awaitility.await(),
-                responseMatcher = matcherFor(entity = todoEntity)
+                responseMatcher = TodoEntityResponseMatcher(expecting = todoEntity)
             )
         }
     }
@@ -82,7 +82,7 @@ class PostThenGetTodosWithSingleDataTest {
                 offset = 0,
                 limit = 1,
                 conditionFactory = Awaitility.await(),
-                responseMatcher = matcherFor(entity = todoEntity)
+                responseMatcher = TodoEntityResponseMatcher(expecting = todoEntity)
             )
         }
     }
@@ -129,7 +129,7 @@ class PostThenGetTodosWithSingleDataTest {
             todoRestApi.getWithOffset(
                 offset = 0,
                 conditionFactory = Awaitility.await(),
-                responseMatcher = matcherFor(entity = todoEntity)
+                responseMatcher = TodoEntityResponseMatcher(expecting = todoEntity)
             )
         }
     }
@@ -174,7 +174,7 @@ class PostThenGetTodosWithSingleDataTest {
             todoRestApi.getWithLimit(
                 limit = 1,
                 conditionFactory = Awaitility.await(),
-                responseMatcher = matcherFor(entity = todoEntity)
+                responseMatcher = TodoEntityResponseMatcher(expecting = todoEntity)
             )
         }
     }
@@ -189,20 +189,8 @@ class PostThenGetTodosWithSingleDataTest {
             todoRestApi.getWithLimit(
                 limit = 2,
                 conditionFactory = Awaitility.await(),
-                responseMatcher = matcherFor(entity = todoEntity)
+                responseMatcher = TodoEntityResponseMatcher(expecting = todoEntity)
             )
         }
     }
-}
-
-private fun matcherFor(entity: TodoEntity): Matcher<Collection<TodoEntity>> {
-    return anyOf(
-        hasItem<TodoEntity>(
-            allOf(
-                hasProperty("id", equalTo(entity.id)),
-                hasProperty("text", equalTo(entity.text)),
-                hasProperty("completed", equalTo(entity.completed))
-            )
-        )
-    )
 }

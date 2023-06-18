@@ -21,7 +21,7 @@ import todo.app.testing.api.rest.impl.TodoRestApi
 @DirtiesContext
 @Feature("GET todos works wo data")
 @SpringBootTest(classes = [TodoRestClientConfiguration::class, TodoAppInDockerConfiguration::class])
-class GetDataTest {
+class GetTest {
 
     @Autowired lateinit var todoRestApi: TodoRestApi
 

@@ -1,0 +1,3 @@
+rest-client-config-data:
+  basicAuthLogin: "read only role user login"
+  basicAuthPassword: "read only role user password"
