@@ -397,3 +397,14 @@ dependencies
 
 For correct operation, you must install any runner or create an additional main class.
 More info at https://github.com/artyushov/idea-jmh-plugin
+
+Then run `PostTodoJvmBenchmark`. The class will run the same Spring context configuration as normal smoke and regress
+tests, but without logging and creating allure attachments.
+By default, it will start a container in docket with test-containers and start the test.
+
+The results and conclusions specifically for my application can be seen here
+[Issues and bugs](issues.md)
+
+You need to understand that this is just a way to quickly understand the capabilities of the application in the dev
+environment. This method cannot replace a full-fledged load testing with the search for the maximum, identifying the
+optimal steps, selecting a configuration, etc.
