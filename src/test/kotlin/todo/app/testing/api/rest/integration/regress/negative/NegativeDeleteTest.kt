@@ -2,6 +2,7 @@ package todo.app.testing.api.rest.integration.regress.negative
 
 import io.qameta.allure.Feature
 import java.math.BigInteger
+import java.util.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.BeforeEach
@@ -11,8 +12,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.RestOperations
 import org.testcontainers.junit.jupiter.Testcontainers
 import todo.app.testing.api.rest.config.TodoAppInDockerConfiguration
 import todo.app.testing.api.rest.config.TodoRestClientConfiguration
@@ -31,6 +38,10 @@ class NegativeDeleteTest {
     @Autowired lateinit var todoRestApi: TodoRestApi
 
     @Autowired lateinit var todoRestClient: TodoRestClient
+
+    @Autowired lateinit var restOperations: RestOperations
+
+    private inline fun <reified T> typeReference() = object : ParameterizedTypeReference<T>() {}
 
     val moreThanLong = BigInteger.valueOf(Long.MAX_VALUE).plus(BigInteger.TEN).toString()
 
@@ -90,6 +101,27 @@ class NegativeDeleteTest {
                     "400 Bad Request: \"Invalid query string: id should be a 64u formatted String\""
                 )
             )
+        )
+    }
+
+    @Test
+    fun `DELETE correct response for unknown user credentials via Basic Auth`() {
+        val httpHeaders = HttpHeaders()
+        httpHeaders.accept = Collections.singletonList(MediaType.APPLICATION_JSON)
+        httpHeaders.contentType = MediaType.APPLICATION_JSON
+        httpHeaders.setBasicAuth("unknown", "unknown")
+
+        assertThat(
+            "DELETE return correct information about exceptional situation when unknown user credentials used via Basic Auth",
+            assertThrows<HttpClientErrorException> {
+                restOperations.exchange(
+                    "/todos/0",
+                    HttpMethod.DELETE,
+                    HttpEntity<Any>(httpHeaders),
+                    typeReference<String>(),
+                )
+            },
+            hasProperty("message", containsString("401 Unauthorized"))
         )
     }
 }

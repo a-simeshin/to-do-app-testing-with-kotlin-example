@@ -303,6 +303,7 @@ For JKS format
 
 ```yml
 rest-client-config-data:
+  ssl: true
   keyStorePath: "path/to/keyStore.jks"
   keyStorePassword: "123456"
   trustStorePath: "path/to/trustStore.jks"
