@@ -12,6 +12,14 @@ import org.testcontainers.containers.output.Slf4jLogConsumer
 @EnableConfigurationProperties(TodoAppInDockerConfigData::class)
 class TodoAppInDockerConfiguration {
 
+    /**
+     * Creates and configures a Docker container for the TO-DO app.
+     *
+     * @param dockerProperties The configuration data for the Docker container.
+     * @return A `GenericContainer` representing the TO-DO app running in a Docker container.
+     *
+     * @throws IllegalArgumentException if the `dockerProperties` parameter is `null`.
+     */
     @Bean
     @ConditionalOnProperty(
         prefix = "to-do-app-in-docker",

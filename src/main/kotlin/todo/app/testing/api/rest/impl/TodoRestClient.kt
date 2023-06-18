@@ -16,6 +16,12 @@ class TodoRestClient(
 
     private inline fun <reified T> typeReference() = object : ParameterizedTypeReference<T>() {}
 
+    /**
+     * Retrieves a list of `TodoEntity` objects using the GET method.
+     *
+     * @return The list of `TodoEntity` objects obtained from the server.
+     * @throws NullPointerException if the response body is null.
+     */
     fun get(): List<TodoEntity> {
         return restOperations
             .exchange(
@@ -28,6 +34,16 @@ class TodoRestClient(
             ?: throw NullPointerException("Got null from rest GET " + setting.todosGetPath)
     }
 
+    /**
+     * Retrieves a list of `TodoEntity` objects using the GET method with optional offset and limit
+     * parameters.
+     *
+     * @param offset The offset value for pagination, or null if not specified.
+     * @param limit The limit value for pagination, or null if not specified.
+     * @return The list of `TodoEntity` objects obtained from the server based on the specified
+     * offset and limit.
+     * @throws NullPointerException if the response body is null.
+     */
     fun get(offset: Any?, limit: Any?): List<TodoEntity> {
         val newUrl = setting.todosGetPath + "?offset=" + offset + "&limit=" + limit
         return restOperations
@@ -41,6 +57,15 @@ class TodoRestClient(
             ?: throw NullPointerException("Got null from GET $newUrl")
     }
 
+    /**
+     * Retrieves a list of `TodoEntity` objects using the GET method with the specified offset
+     * parameter.
+     *
+     * @param offset The offset value for pagination, or null if not specified.
+     * @return The list of `TodoEntity` objects obtained from the server based on the specified
+     * offset.
+     * @throws NullPointerException if the response body is null.
+     */
     fun getWithOffset(offset: Any?): List<TodoEntity> {
         val newUrl = setting.todosGetPath + "?offset=" + offset
         return restOperations
@@ -54,6 +79,15 @@ class TodoRestClient(
             ?: throw NullPointerException("Got null from GET $newUrl")
     }
 
+    /**
+     * Retrieves a list of `TodoEntity` objects using the GET method with the specified limit
+     * parameter.
+     *
+     * @param limit The limit value for pagination, or null if not specified.
+     * @return The list of `TodoEntity` objects obtained from the server based on the specified
+     * limit.
+     * @throws NullPointerException if the response body is null.
+     */
     fun getWithLimit(limit: Any?): List<TodoEntity> {
         val newUrl = setting.todosGetPath + "?limit=" + limit
         return restOperations
@@ -67,6 +101,12 @@ class TodoRestClient(
             ?: throw NullPointerException("Got null from GET $newUrl")
     }
 
+    /**
+     * Creates a new TodoEntity by sending a POST request to the server.
+     *
+     * @param todoEntity The TodoEntity object to be posted.
+     * @throws AssertionError if the HTTP status code of the response is not 201 (CREATED).
+     */
     fun post(todoEntity: Any?) {
         val exchange =
             restOperations.exchange(
@@ -82,6 +122,12 @@ class TodoRestClient(
         )
     }
 
+    /**
+     * Updates an existing TodoEntity by sending a PUT request to the server.
+     *
+     * @param todoEntity The TodoEntity object to be updated.
+     * @throws AssertionError if the HTTP status code of the response is not 200 (OK).
+     */
     fun put(todoEntity: TodoEntity) {
         val exchange =
             restOperations.exchange(
@@ -98,6 +144,13 @@ class TodoRestClient(
         )
     }
 
+    /**
+     * Deletes a TodoEntity by sending a DELETE request to the server.
+     *
+     * @param todoEntityId The ID of the TodoEntity to be deleted.
+     * @throws AssertionError if the HTTP status code of the response is neither 204 (NO_CONTENT)
+     * nor 404 (NOT_FOUND).
+     */
     fun delete(todoEntityId: Any?) {
         val headers = getHeaders()
         headers.setBasicAuth(setting.basicAuthLogin, setting.basicAuthPassword)
@@ -116,6 +169,11 @@ class TodoRestClient(
         )
     }
 
+    /**
+     * Retrieves the HttpHeaders object with the necessary headers for making a request.
+     *
+     * @return The HttpHeaders object with the required headers.
+     */
     private fun getHeaders(): HttpHeaders {
         val httpHeaders = HttpHeaders()
         httpHeaders.accept = singletonList(MediaType.APPLICATION_JSON)

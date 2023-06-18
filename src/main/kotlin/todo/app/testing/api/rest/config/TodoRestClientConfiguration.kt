@@ -21,6 +21,15 @@ import todo.app.testing.api.rest.impl.TodoRestClient
 )
 class TodoRestClientConfiguration {
 
+    /**
+     * Creates and configures a TodoRestApi instance.
+     *
+     * This method is annotated with `@Bean`, indicating that it should be treated as a bean
+     * definition and managed by the Spring framework.
+     *
+     * @param todoRestClient The TodoRestClient dependency to be injected into the TodoRestApi.
+     * @return A TodoRestApi instance with the specified TodoRestClient dependency.
+     */
     @Bean
     fun todoRestApi(@Autowired todoRestClient: TodoRestClient): TodoRestApi {
         return TodoRestApi(todoRestClient)
@@ -54,6 +63,20 @@ class TodoRestClientConfiguration {
 
     @Autowired lateinit var awaitilityConfigData: AwaitilityConfigData
 
+    /**
+     * Initializes Awaitility with the specified configuration.
+     *
+     * This method is annotated with `@PostConstruct`, indicating that it should be invoked
+     * automatically after the bean is constructed and its dependencies are injected.
+     *
+     * This method configures Awaitility with the following settings:
+     * - Polling in the same thread.
+     * - Ignoring exceptions by default.
+     * - Setting the default poll interval to the value specified in
+     * `awaitilityConfigData.defaultPollInterval`, with a time unit of milliseconds.
+     * - Setting the default timeout to the value specified in
+     * `awaitilityConfigData.defaultTimeout`, with a time unit of milliseconds.
+     */
     @PostConstruct
     fun initAwaitility() {
         Awaitility.pollInSameThread()

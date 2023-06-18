@@ -28,7 +28,23 @@
 - There is a linear relationship between the volume of persisted entities via POST and the performance degradation of
   persistence via POST
 
+[Report json](https://github.com/a-simeshin/to-do-app-testing-with-kotlin-example/blob/develop/performance/jmh-report.json)
+For fast-view recommends to use https://jmh.morethan.io/
+
 Results:
+
+| Iteration (each 10s) |  Throughput (tps)  |
+|----------------------|:------------------:|
+| 1                    | 1760.7533389108683 |
+| 2                    | 1812.6600311572374 |
+| 3                    | 1701.3090391827957 |
+| 4                    | 1569.826973670962  |
+| 5                    | 1591.803127436374  |
+| 6                    | 1583.970890363783  |
+| 7                    | 1515.862869150945  |
+| 8                    | 1452.3689804576695 |
+| 9                    | 1405.5689949693392 |
+| 10                   | 1415.2755891370562 |
 
 Percentiles:
 

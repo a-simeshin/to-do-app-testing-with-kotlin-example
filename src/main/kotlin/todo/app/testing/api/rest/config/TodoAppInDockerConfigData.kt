@@ -2,6 +2,7 @@ package todo.app.testing.api.rest.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
+/** Test-containers property bean for autoconfiguration with prefix = to-do-app-in-docker */
 @ConfigurationProperties(prefix = "to-do-app-in-docker")
 data class TodoAppInDockerConfigData(
     val enabled: Boolean = false,

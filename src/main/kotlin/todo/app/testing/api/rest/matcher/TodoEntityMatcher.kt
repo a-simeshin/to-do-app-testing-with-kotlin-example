@@ -5,6 +5,13 @@ import org.hamcrest.Matchers.*
 import org.hamcrest.TypeSafeMatcher
 import todo.app.testing.api.rest.dto.TodoEntity
 
+/**
+ * Custom Matcher implementation for matching a Collection of TodoEntity objects with an expected
+ * TodoEntity. This matcher checks if the collection contains an item that matches the specified
+ * TodoEntity based on its ID, text, and completed status.
+ *
+ * @param expecting The TodoEntity object to be matched against the collection.
+ */
 class TodoEntityResponseMatcher(expecting: TodoEntity) : TypeSafeMatcher<Collection<TodoEntity>>() {
 
     private val matcher =

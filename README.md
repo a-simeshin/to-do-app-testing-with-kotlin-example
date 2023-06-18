@@ -379,3 +379,21 @@ to-do-app-in-docker:
 It is also possible to run an integration application on a remote host with a running docker engine.
 - https://java.testcontainers.org/features/configuration/
 - https://github.com/docker-java/docker-java/blob/main/docs/getting_started.md#properties-docker-javaproperties
+
+# Performance check with JMH
+
+dependencies
+
+```yaml
+<dependency>
+    <groupId>org.openjdk.jmh</groupId>
+    <artifactId>jmh-core</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.openjdk.jmh</groupId>
+    <artifactId>jmh-generator-annprocess</artifactId>
+</dependency>
+```
+
+For correct operation, you must install any runner or create an additional main class.
+More info at https://github.com/artyushov/idea-jmh-plugin
