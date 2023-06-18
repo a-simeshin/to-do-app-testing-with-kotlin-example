@@ -24,7 +24,7 @@ import todo.app.testing.api.rest.impl.TodoRestClient
 @Tag("get-todo")
 @Testcontainers
 @DirtiesContext
-@Feature("GET todos works wo data")
+@Feature("Exception handling GET todos")
 @SpringBootTest(classes = [TodoRestClientConfiguration::class, TodoAppInDockerConfiguration::class])
 class NegativeGetTest {
 

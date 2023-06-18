@@ -98,7 +98,7 @@ class TodoRestClient(
         )
     }
 
-    fun delete(todoEntityId: Any) {
+    fun delete(todoEntityId: Any?) {
         val headers = getHeaders()
         headers.setBasicAuth(setting.basicAuthLogin, setting.basicAuthPassword)
         val exchange =

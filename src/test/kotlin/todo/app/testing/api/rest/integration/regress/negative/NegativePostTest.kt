@@ -21,10 +21,10 @@ import todo.app.testing.api.rest.impl.TodoRestClient
 
 @Tag("regress")
 @Tag("negative")
-@Tag("get-todo")
+@Tag("post-todo")
 @Testcontainers
 @DirtiesContext
-@Feature("GET todos works wo data")
+@Feature("Exception handling POST todos")
 @SpringBootTest(classes = [TodoRestClientConfiguration::class, TodoAppInDockerConfiguration::class])
 class NegativePostTest {
 
