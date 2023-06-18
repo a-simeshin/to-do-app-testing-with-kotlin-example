@@ -1,6 +1,6 @@
 # to-do-app-testing-with-kotlin-example
 
-# Content
+# Additional info
 
 - [Issues and bugs](issues.md)
 
