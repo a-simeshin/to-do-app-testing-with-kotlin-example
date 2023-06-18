@@ -1,5 +1,16 @@
 # to-do-app-testing-with-kotlin-example
 
+Project with integration tests on tech stack:
+- Java 17
+- Kotlin 1.8.21
+- Spring-boot 3.1.0
+- Httpclient 5.2
+- Sslcontext-kickstart 8.1.1
+- Junit5 5.9.3
+- Allure 2.13.6
+- Awaitility 4.2
+- Testcontainers 1.18.0
+
 # Additional info
 
 - [Issues and bugs](issues.md)
