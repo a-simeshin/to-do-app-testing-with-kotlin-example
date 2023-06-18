@@ -1,5 +1,9 @@
 # to-do-app-testing-with-kotlin-example
 
+# Content
+
+- [Issues and bugs](issues.md)
+
 # Description
 
 This project exemplifies some of the good test automation practices that I have come across:
