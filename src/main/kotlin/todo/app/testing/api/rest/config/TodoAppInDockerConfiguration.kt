@@ -25,8 +25,10 @@ class TodoAppInDockerConfiguration {
             genericContainer.addExposedPort(hostPort)
             genericContainer.portBindings.add("$hostPort:$containerPort")
         }
-        genericContainer.logConsumers =
-            listOf(Slf4jLogConsumer(LoggerFactory.getLogger(this.javaClass)))
+        if (dockerProperties.logging) {
+            genericContainer.logConsumers =
+                listOf(Slf4jLogConsumer(LoggerFactory.getLogger(this.javaClass)))
+        }
         return genericContainer
     }
 }

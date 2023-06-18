@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "to-do-app-in-docker")
 data class TodoAppInDockerConfigData(
     val enabled: Boolean = false,
+    val logging: Boolean = true,
     val imageName: String = "todo-app:latest",
     val exposedPorts: Map<Int, Int> = mapOf(8080 to 4242)
 )

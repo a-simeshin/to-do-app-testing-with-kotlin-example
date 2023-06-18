@@ -1,0 +1,61 @@
+[
+    {
+        "jmhVersion" : "1.36",
+        "benchmark" : "todo.app.testing.api.rest.performance.PostTodoJvmBenchmark.someBenchmarkMethod",
+        "mode" : "thrpt",
+        "threads" : 1,
+        "forks" : 0,
+        "jvm" : "C:\\Users\\artem\\.gradle\\jdks\\adoptium-17-x64-hotspot-windows\\jdk-17.0.7+7\\bin\\java.exe",
+        "jvmArgs" : [
+            "-server"
+        ],
+        "jdkVersion" : "17.0.7",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "17.0.7+7",
+        "warmupIterations" : 1,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 10,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 1580.939983443703,
+            "scoreError" : 213.64946560443167,
+            "scoreConfidence" : [
+                1367.2905178392714,
+                1794.5894490481348
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1405.5689949693392,
+                "50.0" : 1576.8989320173723,
+                "90.0" : 1807.4693619326006,
+                "95.0" : 1812.6600311572374,
+                "99.0" : 1812.6600311572374,
+                "99.9" : 1812.6600311572374,
+                "99.99" : 1812.6600311572374,
+                "99.999" : 1812.6600311572374,
+                "99.9999" : 1812.6600311572374,
+                "100.0" : 1812.6600311572374
+            },
+            "scoreUnit" : "ops/s",
+            "rawData" : [
+                [
+                    1760.7533389108683,
+                    1812.6600311572374,
+                    1701.3090391827957,
+                    1569.826973670962,
+                    1591.803127436374,
+                    1583.970890363783,
+                    1515.862869150945,
+                    1452.3689804576695,
+                    1405.5689949693392,
+                    1415.2755891370562
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    }
+]
+
+

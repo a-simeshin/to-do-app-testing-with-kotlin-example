@@ -14,7 +14,8 @@
   - TO be: cannot be more than Long.MAX(9,223,372,036,854,775,807)
 - Add `POST` detailed `message` with `request body payload about exceptional situations` with `deserialization`
   - As is: 400 Bad Request: "Request body deserialize error: EOF while parsing a value at line 1 column 0""
-  - To be: 400 Bad Request: "Request body deserialize error: EOF while parsing a value at line 1 column 0. Request body: {...}"
+  - To be: 400 Bad Request: "Request body deserialize error: EOF while parsing a value at line 1 column 0. Request
+    body: {...}"
 - Add `POST` restriction to field `text` in `TODO entity`
   - As is: cannot be null String
   - To be: cannot be empty or null String
@@ -24,10 +25,30 @@
 - Add `PUT` `more detailed information` about `what happens` in this exceptional situation
   - As is: 404 Not Found
   - To be: 404 Not Found: Cannot find TODO entity with id {}
-- 
+- There is a linear relationship between the volume of persisted entities via POST and the performance degradation of
+  persistence via POST
+
+Results:
+
+Percentiles:
+
+| Percentile | Throughput (tps) |
+|------------|:----------------:|
+| 0.0        |     1405.57      |
+| 50.0       |     1576.90      |
+| 90.0       |     1807.47      |
+| 95.0       |     1812.66      |
+| 99.0       |     1812.66      |
+| 99.9       |     1812.66      |
+| 99.99      |     1812.66      |
+| 99.999     |     1812.66      |
+| 99.9999    |     1812.66      |
+| 100.0      |     1812.66      |
 
 ### Issues for tests
 
 - Health check call HTTP method minimum twice in case of fail-fast and condition evaluation
 - Restarting a Spring context does not reload the AUT image in Docker, cause 500 driver exception
+- Proxy-application with micrometer to collect metrics, if real application does not provide metrics
+- Load-runner based performance check
 
