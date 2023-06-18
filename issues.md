@@ -29,4 +29,5 @@
 ### Issues for tests
 
 - Health check call HTTP method minimum twice in case of fail-fast and condition evaluation
+- Restarting a Spring context does not reload the AUT image in Docker, cause 500 driver exception
 

@@ -4,7 +4,7 @@
 rest-client-config-data:
   url: "http://localhost:8080"
   todosGetPath: "/todos"
-  todosPostPath: "/todos/{id}"
+  todosPostPath: "/todos"
   todosPutPath: "/todos/{id}"
   todosDeletePath: "/todos/{id}"
   basicAuthLogin: "test credential login"
@@ -19,6 +19,10 @@ rest-client-config-data:
   maxTotalConnections: 1000
   maxConnectionsPerRoute: 5
   enableHttpAttachments: true
+
+awaitility:
+  defaultPollInterval: 500
+  defaultTimeout: 10000
 
 # This section for generic docker image configuration for test-containers
 # By default enabled=false and this properties is not required for integration tests

@@ -16,7 +16,9 @@ import todo.app.testing.api.rest.impl.TodoRestClient
  * the TodoRestClient bean using the provided RestOperations and TodoRestClientConfigData.
  */
 @Configuration
-@EnableConfigurationProperties(TodoRestClientConfigData::class)
+@EnableConfigurationProperties(
+    value = [TodoRestClientConfigData::class, AwaitilityConfigData::class]
+)
 class TodoRestClientConfiguration {
 
     @Bean
@@ -50,11 +52,16 @@ class TodoRestClientConfiguration {
         return RestOperationsFactory(settings.validate()).buildRestOperations()
     }
 
+    @Autowired lateinit var awaitilityConfigData: AwaitilityConfigData
+
     @PostConstruct
     fun initAwaitility() {
         Awaitility.pollInSameThread()
         Awaitility.ignoreExceptionsByDefault()
-        Awaitility.setDefaultPollInterval(500, TimeUnit.MILLISECONDS)
-        Awaitility.setDefaultTimeout(10, TimeUnit.SECONDS)
+        Awaitility.setDefaultPollInterval(
+            awaitilityConfigData.defaultPollInterval,
+            TimeUnit.MILLISECONDS
+        )
+        Awaitility.setDefaultTimeout(awaitilityConfigData.defaultTimeout, TimeUnit.MILLISECONDS)
     }
 }
